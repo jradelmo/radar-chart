@@ -39,8 +39,8 @@ export default function Home() {
       {
         label: 'Dados de exibição',
         data: [
-          65, 59, 72, 81, 56, 55, 40, 15, 22, 44, 26, 7, 66, 52, 44, 12, 6, 36,
-          22, 66,
+          3, 7, 22, 16, 32, 16, 9, 15, 33, 44, 45, 46, 52, 54, 56, 58, 60, 36,
+          22, 26,
         ],
         fill: true,
         backgroundColor: 'rgba(94, 0, 90, 0.3)',
