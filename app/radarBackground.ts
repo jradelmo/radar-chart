@@ -4,9 +4,8 @@ import {
   Point,
   RadialLinearScaleOptions,
   Scale,
-} from "chart.js";
-import { AnyObject } from "chart.js/types/basic";
-
+} from 'chart.js';
+type AnyObject = Record<string, any>;
 // Extending a couple of loosely defined Chart.js types to include required data
 // that is available within the Chart instance.
 export type RadialLinearScaleItem = Partial<LayoutItem> & {
@@ -19,13 +18,14 @@ export type RadarScaleOptions = Partial<Scale<RadialLinearScaleOptions>> & {
 };
 export type RadarCanvasContext = Pick<
   CanvasRenderingContext2D,
-  | "beginPath"
-  | "moveTo"
-  | "lineTo"
-  | "closePath"
-  | "fillStyle"
-  | "fill"
-  | "restore"
+  | 'beginPath'
+  | 'moveTo'
+  | 'lineTo'
+  | 'closePath'
+  | 'fillStyle'
+  | 'fill'
+  | 'restore'
+  | 'arc'
 >;
 
 export type RadarAttributes = {
@@ -37,8 +37,8 @@ export type RadarAttributes = {
 };
 
 type RadarBackgroundPlugin<O = AnyObject> = Omit<
-  Plugin<"radar">,
-  "beforeDraw"
+  Plugin<'radar'>,
+  'beforeDraw'
 > & {
   beforeDraw(
     chart: RadarAttributes,
@@ -51,7 +51,7 @@ type RadarBackgroundPlugin<O = AnyObject> = Omit<
 const MINIMUM_POINTS = 3;
 
 const radarBackground: RadarBackgroundPlugin = {
-  id: "radar-background",
+  id: 'radar-background',
 
   beforeDraw({ boxes, ctx, scales }: RadarAttributes) {
     const scaleOptions = scales.r as RadarScaleOptions;
@@ -88,8 +88,29 @@ const radarBackground: RadarBackgroundPlugin = {
       ctx.closePath();
     }
 
-    ctx.fillStyle = "#5bc440";
-    ctx.fill();
+    const colors = [
+      'rgba(204, 227, 218, 1)',
+      'rgba(192, 220, 237, 1)',
+      'rgba(255, 214, 219, 1)',
+      'rgba(255, 247, 205, 1)',
+    ];
+    const numColors = colors.length;
+    const sectionAngle = 360 / numColors;
+
+    for (let i = 0; i < numColors; i++) {
+      ctx.fillStyle = colors[i];
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(xCenter, yCenter);
+      ctx.arc(
+        xCenter,
+        yCenter,
+        radius,
+        i * sectionAngle * (Math.PI / 180),
+        (i + 1) * sectionAngle * (Math.PI / 180)
+      );
+      ctx.closePath();
+    }
 
     ctx.restore();
   },
